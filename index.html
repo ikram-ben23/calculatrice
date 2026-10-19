@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Interactive calculator with keyboard support and proper operator precedence, built in vanilla JS." />
+  <title>Interactive Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="appbar">
+    <span class="sidebar-ico" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/></svg>
+    </span>
+    <nav class="crumbs" aria-label="Breadcrumb">
+   
+    </nav>
+    <div class="brand" aria-hidden="true"><em>{</em><span>GDG Integration Program</span><em>}</em></div>
+  </header>
+
+  <main class="stage">
+    <div class="wrap">
+      <!-- decorations -->
+      <svg class="deco star" viewBox="0 0 24 24" width="34" height="34" aria-hidden="true"><path d="M12 0C13 8 16 11 24 12C16 13 13 16 12 24C11 16 8 13 0 12C8 11 11 8 12 0Z" fill="#3b82f6"/></svg>
+      <svg class="deco zig" viewBox="0 0 24 20" width="34" height="28" aria-hidden="true"><path d="M2 14 8 6l4 8 6-10" fill="none" stroke="#fbbc04" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+
+      <section class="calc" aria-label="Calculator">
+        <div class="task-head">
+          <div class="top-actions">
+            <button id="historyBtn" class="icon-btn" aria-label="Open history (H)" title="History (H)">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+            </button>
+            <button id="themeBtn" class="icon-btn" aria-label="Toggle theme (T)" title="Toggle theme (T)">
+              <svg class="i-moon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+              <svg class="i-sun" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="display">
+          <div id="expression" class="expression" aria-label="Expression"></div>
+          <div id="result" class="result" role="status" aria-live="polite" title="Click to copy">0</div>
+        </div>
+
+        <div id="pad">
+        <div class="options">
+          <button id="sciBtn" class="pill-btn" aria-pressed="true" aria-controls="sci" title="Scientific functions (M)">Scientific</button>
+          <button id="angleBtn" class="pill-btn" title="Degrees / Radians (D)">DEG</button>
+          <button class="pill-btn" data-val="ans" title="Last answer (A)">Ans</button>
+        </div>
+
+        <div id="sci" class="sci open">
+          <button class="key sci-key" data-val="f:sin"  title="sine (S)">sin</button>
+          <button class="key sci-key" data-val="f:cos"  title="cosine (C)">cos</button>
+          <button class="key sci-key" data-val="f:tan"  title="tangent">tan</button>
+          <button class="key sci-key" data-val="f:ln"   title="natural logarithm (L)">ln</button>
+          <button class="key sci-key" data-val="f:log"  title="logarithm base 10 (G)">log</button>
+
+          <button class="key sci-key" data-val="f:asin" title="inverse sine">sin⁻¹</button>
+          <button class="key sci-key" data-val="f:acos" title="inverse cosine">cos⁻¹</button>
+          <button class="key sci-key" data-val="f:atan" title="inverse tangent">tan⁻¹</button>
+          <button class="key sci-key" data-val="f:exp"  title="e to the power x">eˣ</button>
+          <button class="key sci-key" data-val="f:abs"  title="absolute value">|x|</button>
+
+          <button class="key sci-key" data-val="f:sqrt" title="square root (R)">√</button>
+          <button class="key sci-key" data-val="sq"     title="square">x²</button>
+          <button class="key sci-key" data-val="fact"   title="factorial (!)">n!</button>
+          <button class="key sci-key" data-val="c:pi"   title="pi (P)">π</button>
+          <button class="key sci-key" data-val="c:e"    title="Euler's number (E)">e</button>
+        </div>
+
+        <div id="keys" class="keys">
+          <button class="key clr" data-val="clear" aria-label="Clear all">AC</button>
+          <button class="key fn"  data-val="back"  aria-label="Backspace">⌫</button>
+          <button class="key fn"  data-val="%"     aria-label="Percent">%</button>
+          <button class="key op"  data-val="/"     aria-label="Divide">÷</button>
+
+          <button class="key fn"  data-val="("     aria-label="Open parenthesis">(</button>
+          <button class="key fn"  data-val=")"     aria-label="Close parenthesis">)</button>
+          <button class="key fn"  data-val="^"     aria-label="Power">xʸ</button>
+          <button class="key op"  data-val="*"     aria-label="Multiply">×</button>
+
+          <button class="key num" data-val="7">7</button>
+          <button class="key num" data-val="8">8</button>
+          <button class="key num" data-val="9">9</button>
+          <button class="key op"  data-val="-"     aria-label="Minus">−</button>
+
+          <button class="key num" data-val="4">4</button>
+          <button class="key num" data-val="5">5</button>
+          <button class="key num" data-val="6">6</button>
+          <button class="key op"  data-val="+"     aria-label="Plus">+</button>
+
+          <button class="key num" data-val="1">1</button>
+          <button class="key num" data-val="2">2</button>
+          <button class="key num" data-val="3">3</button>
+          <button class="key eq"  data-val="="     aria-label="Equals">=</button>
+
+          <button class="key num zero" data-val="0">0</button>
+          <button class="key num" data-val="." aria-label="Decimal point">.</button>
+        </div>
+        </div><!-- /#pad -->
+
+        <aside id="drawer" class="drawer" aria-hidden="true" aria-label="History">
+          <div class="drawer-head">
+            <h2>History</h2>
+            <div>
+              <button id="clearHistory" class="pill-btn">Clear</button>
+              <button id="closeHistory" class="icon-btn" aria-label="Close history">✕</button>
+            </div>
+          </div>
+          <ul id="historyList" class="history-list"></ul>
+        </aside>
+
+        <div id="toast" class="toast" role="status"></div>
+      </section>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
